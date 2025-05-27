@@ -55,10 +55,20 @@ func main() {
 		case 6:
 			selectionSort(&kripto, jumlahAset)
 			daftarAset(kripto, jumlahAset)
-
 		case 7:
-			tampilSaldo()
+			insertionSort(&kripto, jumlahAset)
+			daftarAset(kripto, jumlahAset)
+			
 		case 8:
+			fmt.Println("||--------------------------------------------||")
+			fmt.Println("|| Masukkan nama aset yang ingin dicari:      ||")
+			fmt.Scan(&nama)
+			binarySearch(kripto, jumlahAset, nama)
+			
+		case 9:
+			tampilSaldo()
+			
+		case 10:
 			cetakriwayat()
 		case 0:
 			fmt.Println("||--------------------------------------------||")
@@ -80,7 +90,7 @@ func ClearScreen() {
 		fmt.Print("\033[H\033[2J")
 	}
 }
-func menu(option *int) {
+func menu(option *int) { 
 	fmt.Println("||--------------------------------------------||")
 	fmt.Println("||------------------- Menu -------------------||")
 	fmt.Println("|| 1. Tambah Aset Kripto                      ||")
@@ -88,9 +98,11 @@ func menu(option *int) {
 	fmt.Println("|| 3. Hapus Aset Kripto                       ||")
 	fmt.Println("|| 4. Beli Aset Kripto                        ||")
 	fmt.Println("|| 5. Jual Aset Kripto                        ||")
-	fmt.Println("|| 6. Lihat Daftar Aset                       ||")
-	fmt.Println("|| 7. Lihat Saldo                             ||")
-	fmt.Println("|| 8. Lihat Riwayat Transaksi                 ||")
+	fmt.Println("|| 6. Urut harga Aset (selectionSort)         ||")
+	fmt.Println("|| 7. Urut harga Aset (InsertionSort)         ||")
+	fmt.Println("|| 8. Urut nama aset (binarySearch)           ||")
+	fmt.Println("|| 9. Lihat Saldo yang Tersisa                ||")
+	fmt.Println("|| 10. Lihat Riwayat Transaksi                ||")
 	fmt.Println("|| 0. Keluar                                  ||")
 	fmt.Println("||--------------------------------------------||")
 	fmt.Println("||--------------------------------------------||")
@@ -117,6 +129,63 @@ func selectionSort(a *arrKripto, jumlahAset int) {
 		pass = pass + 1
 	}
 }
+
+//Pengurutan harga aset dengan insertion sort
+func  insertionSort(a *arrKripto, jumlahAset int) {
+	var i, pass int
+	var temp asetKripto
+	
+	pass = 1
+	for pass <= jumlahAset - 1 {
+		i = pass
+		temp.harga = a[pass].harga
+		for i > 0 && temp.harga < a[i-1].harga {
+			a[i].harga = a[i-1].harga
+			i = i - 1
+		}
+		a[i].harga = temp.harga
+		pass = pass + 1
+	}
+}
+
+//Pencarian nama aset dengan binary search
+func binarySearch(a arrKripto, jumlahAset int, nama string)int {
+	var i, pass int
+	var temp asetKripto
+	
+	pass = 1
+	for pass <= jumlahAset - 1 {
+		i = pass
+		temp.namaAset = a[pass].namaAset
+		for i > 0 && temp.namaAset < a[i-1].namaAset {
+			a[i].namaAset = a[i-1].namaAset
+			i = i - 1
+		}
+		a[i].namaAset = temp.namaAset
+		pass = pass + 1
+	}
+	
+	var low, high, mid int
+	low = 0
+	high = jumlahAset - 1
+
+	for low <= high {
+		mid = (low + high) / 2
+		if a[mid].namaAset == nama {
+			fmt.Println("||--------------------------------------------||")
+			fmt.Printf(" Aset ditemukan: %s | Harga: %.0f | Nilai Pasar: %.0f ||\n", a[mid].namaAset, a[mid].harga, a[mid].nilaiAset)
+			return mid
+		} else if a[mid].namaAset < nama {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	fmt.Println("||--------------------------------------------||")
+	fmt.Println("||         Aset tidak ditemukan               ||")
+	return -1
+}
+
 func tambahAset(kripto *arrKripto, jumlahAset *int) {
 
 	var nama string
